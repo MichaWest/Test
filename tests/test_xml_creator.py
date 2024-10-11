@@ -56,8 +56,11 @@ def test__write_output_method():
     pass
 
 
-def test_create_param_tags_method():
-    pass
+@pytest.mark.parametrize('path_file',
+                         [pytest.param('src/input/test_standart.xml'),
+                          ], )
+def test_create_param_tags_method(path_file):
+    assert True
 
 
 @pytest.mark.parametrize('fixture,path_file,root_tag_name',
@@ -72,14 +75,17 @@ def test_create_structure_method(fixture, path_file, root_tag_name, request):
         data.find('Class', {'name': root_tag_name}))
 
 
-def test_write_parameters_method():
-    pass
-
-
-
-
-
-
-
+@pytest.mark.parametrize('path_file,indent_tag,expected_dict',
+                         [('src/input/test_standart.xml', {'name': 'BTS'}, {'id': 'uint32', 'name': 'string'}),
+                          ('src/input/test_standart.xml', {'name': 'MGMT'}, {}),
+                          ('src/input/test_standart.xml', {'name': 'RU'}, {'hwRevision': 'string', 'id': 'uint32', 'ipv4Address': 'string', 'manufacturerName':'string'})
+                          ], )
+def test_write_parameters_method(path_file, indent_tag, expected_dict):
+    with open(path_file, 'r') as f:
+        data = BeautifulSoup(f, features="xml")
+    tag = data.find('Class', indent_tag)
+    xml_creator = XML_creator(path_file)
+    xml_node = XML_node('test')
+    assert xml_creator.__write__parameters__(tag, xml_node).parameters == expected_dict
 
 
