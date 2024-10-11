@@ -40,7 +40,7 @@ class XML_creator:
 
         root_node = self.__create_structure__(root_tag)
 
-        self.__create_param_tags__(root_node.parameters, root_tag)
+        self.__add_param_tags__(root_node.parameters, root_tag)
         self.BS_result.append(root_tag)
 
         self.__write_output__(root_node, root_tag)
@@ -55,15 +55,18 @@ class XML_creator:
         for c in node.children:
             new_tag = self.BS_result.new_tag(c.name)
             tag.append(new_tag)
-            self.__create_param_tags__(c.parameters, new_tag)
+            self.__add_param_tags__(c.parameters, new_tag)
             self.__write_output__(c, new_tag)
 
-    def __create_param_tags__(self, params: dict, tag: element.Tag) -> element.Tag:
+    def __add_param_tags__(self, params: dict, tag: element.Tag) -> element.Tag:
         for param in params:
-            param_tag = self.BS_result.new_tag(param)
-            param_tag.string = params[param]
-            tag.append(param_tag)
+            tag.append(self.__create_param_tag__(param, params[param]))
         return tag
+
+    def __create_param_tag__(self, name: str, value: str) -> element.Tag:
+        param_tag = self.BS_result.new_tag(name)
+        param_tag.string = value
+        return param_tag
 
     def __create_structure__(self, tag: element.Tag) -> XML_node:
         tag_name = tag.attrs['name']
