@@ -27,11 +27,10 @@ class XML_node:
 
 class XML_creator:
 
-    def __init__(self, input_path: str, output_path: str = "out/config.xml"):
+    def __init__(self, input_bs: BeautifulSoup, output_path: str = "out/config.xml"):
         self.BS_result = BeautifulSoup(features="xml")
         self.output_path = output_path
-        with open(input_path, 'r') as f:
-            self.BS_data = BeautifulSoup(f, features="xml")
+        self.BS_data = input_bs
 
     def create_file(self) -> None:
         root_tag = self.get_root_tag(self.BS_data, {'isRoot': "true"})

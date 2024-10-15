@@ -26,11 +26,10 @@ class JSON_node:
 
 class JSON_creator:
 
-    def __init__(self, input_path: str, output_path: str):
+    def __init__(self, input_bs: BeautifulSoup, output_path: str):
         self.list_node: list[JSON_node] = []
         self.output_path = output_path
-        with open(input_path, 'r') as f:
-            self.BS_data = BeautifulSoup(f, features="xml")
+        self.BS_data = input_bs
 
     def create_file(self) -> None:
         first_tag = self.BS_data.find('Class')

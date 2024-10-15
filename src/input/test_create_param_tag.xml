@@ -1,0 +1,9 @@
+<main>
+    <id>uint32</id>
+    <name>string</name>
+    <isFinished>boolean</isFinished>
+    <jobId>uint32</jobId>
+    <hwRevision>string</hwRevision>
+    <ipv4Address>string</ipv4Address>
+    <manufacturerName>string</manufacturerName>
+</main>
