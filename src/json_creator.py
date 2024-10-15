@@ -5,14 +5,8 @@ from bs4 import BeautifulSoup, element
 
 class JSON_node:
 
-    def __init__(self):
-        self.class_name: str = ''
-        self.isRoot: bool = False
-        self.documentation: str = ''
-        self.parameters: list[{str: str}] = []
-
-    def __init__(self, class_name: str, is_root: bool, doc: str, param: list[{str: str}]):
-        self.class_name: str = class_name
+    def __init__(self, name: str = '', is_root: bool = False, doc: str = '', param: list[{str: str}] = []):
+        self.class_name: str = name
         self.isRoot: bool = is_root
         self.documentation: str = doc
         self.parameters: list[{str: str}] = param
@@ -37,6 +31,9 @@ class JSON_node:
 
     def __len__(self):
         return len(self.__dict__) + len(self.parameters) + 1
+
+    def __str__(self):
+        return self.class_name+" "+str(self.isRoot)+" "+self.documentation+" "+str(self.parameters)
 
 
 class JSON_creator:
