@@ -115,3 +115,14 @@ def test_empty_file(open_file_in_xml, output_path_file):
     output_data = xml_creator.create_file()
 
     assert bool(output_data.find_all)
+
+
+@pytest.mark.parametrize("open_file_in_xml,output_path",
+                         [("src/input/test_input.xml", "src/input/test_output.json")],
+                         indirect=['open_file_in_xml'])
+def test_invalid_output_path(open_file_in_xml, output_path):
+    data = open_file_in_xml
+    with pytest.raises(ValueError):
+        XML_creator(data, output_path)
+
+
