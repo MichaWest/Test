@@ -46,9 +46,8 @@ class XML_creator:
             root_node = self.__create_structure__(root_tag)
 
             self.__add_param_tags__(root_node.parameters, root_tag)
-            self.BS_result.append(root_tag)
 
-            self.__write_output__(root_node, root_tag)
+            self.BS_result.append(self.__write_output__(root_node))
 
         with open(self.output_path, "w") as f:
             f.write(self.BS_result.prettify())
@@ -58,12 +57,12 @@ class XML_creator:
     def get_root_tag(self, data: bs4.BeautifulSoup, indent_root: dict[str:str]) -> element.Tag:
         return data.find('Class', indent_root)
 
-    def __write_output__(self, node: XML_node, tag: element.Tag) -> None:
+    def __write_output__(self, node: XML_node) -> element.Tag:
+        new_tag = self.BS_result.new_tag(node.name)
+        self.__add_param_tags__(node.parameters, new_tag)
         for c in node.children:
-            new_tag = self.BS_result.new_tag(c.name)
-            tag.append(new_tag)
-            self.__add_param_tags__(c.parameters, new_tag)
-            self.__write_output__(c, new_tag)
+            new_tag.append(self.__write_output__(c))
+        return new_tag
 
     def __add_param_tags__(self, params: dict, tag: element.Tag) -> element.Tag:
         for param in params:
