@@ -32,20 +32,23 @@ class XML_creator:
         self.output_path = output_path
         self.BS_data = input_bs
 
-    def create_file(self) -> None:
-        root_tag = self.get_root_tag(self.BS_data, {'isRoot': "true"})
-        for t in root_tag.children:
-            print(t)
+    def create_file(self) -> BeautifulSoup:
+        if len(self.BS_data.find_all()) != 0:
+            root_tag = self.get_root_tag(self.BS_data, {'isRoot': "true"})
+            for t in root_tag.children:
+                print(t)
 
-        root_node = self.__create_structure__(root_tag)
+            root_node = self.__create_structure__(root_tag)
 
-        self.__add_param_tags__(root_node.parameters, root_tag)
-        self.BS_result.append(root_tag)
+            self.__add_param_tags__(root_node.parameters, root_tag)
+            self.BS_result.append(root_tag)
 
-        self.__write_output__(root_node, root_tag)
+            self.__write_output__(root_node, root_tag)
 
         with open(self.output_path, "w") as f:
             f.write(self.BS_result.prettify())
+
+        return self.BS_result
 
     def get_root_tag(self, data: bs4.BeautifulSoup, indent_root: dict[str:str]) -> element.Tag:
         return data.find('Class', indent_root)
