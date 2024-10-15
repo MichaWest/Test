@@ -1,4 +1,5 @@
 import json
+import os
 
 from bs4 import BeautifulSoup, element
 
@@ -24,7 +25,7 @@ class JSON_node:
         if type(other) is JSON_node:
             return self.class_name == other.class_name and \
                    self.isRoot == other.isRoot and \
-                   self.documentation == other.documantation and \
+                   self.documentation == other.documentation and \
                    self.parameters == other.parameters
         else:
             return False
@@ -39,6 +40,11 @@ class JSON_node:
 class JSON_creator:
 
     def __init__(self, input_bs: BeautifulSoup, output_path: str = "out/config.json"):
+        filename, file_extension = os.path.splitext(output_path)
+
+        if file_extension != ".json":
+            raise ValueError("The path must point to the format file.json")
+
         self.list_node: list[JSON_node] = []
         self.output_path = output_path
         self.BS_data = input_bs
@@ -90,7 +96,7 @@ class JSON_creator:
             child_name = t.attrs['source']
             node.parameters.append({'name': child_name, 'type': 'class'})
 
-        return JSON_node
+        return node
 
     def __write_out_structure__(self) -> list:
         json_list = []
