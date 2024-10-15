@@ -31,14 +31,16 @@ class JSON_creator:
         self.output_path = output_path
         self.BS_data = input_bs
 
-    def create_file(self) -> None:
-        first_tag = self.BS_data.find('Class')
-        self.__create_structure__(first_tag)
-        json_list = self.__write_out_structure__()
+    def create_file(self) -> list:
+        json_list = []
+        if len(self.BS_data.find_all()) != 0:
+            first_tag = self.BS_data.find('Class')
+            self.__create_structure__(first_tag)
+            json_list = self.__write_out_structure__()
 
         with open(self.output_path, mode='w') as f:
             f.write(json.dumps(json_list, indent=4))
-        return None
+        return json_list
 
     def __create_structure__(self, tag: element.Tag) -> JSON_node:
         node = JSON_node()
