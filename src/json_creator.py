@@ -11,6 +11,12 @@ class JSON_node:
         self.documentation: str = ''
         self.parameters: list[{str: str}] = []
 
+    def __init__(self, class_name: str, is_root: bool, doc: str, param: list[{str: str}]):
+        self.class_name: str = class_name
+        self.isRoot: bool = is_root
+        self.documentation: str = doc
+        self.parameters: list[{str: str}] = param
+
     def add_param(self, param_name: str, param_type: str):
         self.parameters.append({param_name: param_type})
 
@@ -20,13 +26,22 @@ class JSON_node:
         del json_dict['class_name']
         return json_dict
 
+    def __eq__(self, other):
+        if type(other) is JSON_node:
+            return self.class_name == other.class_name and \
+                   self.isRoot == other.isRoot and \
+                   self.documentation == other.documantation and \
+                   self.parameters == other.parameters
+        else:
+            return False
+
     def __len__(self):
         return len(self.__dict__) + len(self.parameters) + 1
 
 
 class JSON_creator:
 
-    def __init__(self, input_bs: BeautifulSoup, output_path: str):
+    def __init__(self, input_bs: BeautifulSoup, output_path: str = "out/config.json"):
         self.list_node: list[JSON_node] = []
         self.output_path = output_path
         self.BS_data = input_bs
@@ -53,7 +68,7 @@ class JSON_creator:
 
         return node
 
-    def __define_fields__(self, node: JSON_node, tag: element.Tag) -> None:
+    def __define_fields__(self, node: JSON_node, tag: element.Tag) -> JSON_node:
         # определяем поле 'name'
         tag_name = tag.attrs['name']
         node.class_name = tag_name
@@ -77,6 +92,8 @@ class JSON_creator:
         for t in aggregation_tags:
             child_name = t.attrs['source']
             node.parameters.append({'name': child_name, 'type': 'class'})
+
+        return JSON_node
 
     def __write_out_structure__(self) -> list:
         json_list = []
