@@ -1,3 +1,5 @@
+import os
+
 import bs4
 from bs4 import BeautifulSoup, element
 
@@ -28,6 +30,11 @@ class XML_node:
 class XML_creator:
 
     def __init__(self, input_bs: BeautifulSoup, output_path: str = "out/config.xml"):
+        filename, file_extension = os.path.splitext(output_path)
+
+        if file_extension != ".xml":
+            raise ValueError("The path must point to the format file .xml")
+
         self.BS_result = BeautifulSoup(features="xml")
         self.output_path = output_path
         self.BS_data = input_bs
@@ -35,8 +42,6 @@ class XML_creator:
     def create_file(self) -> BeautifulSoup:
         if len(self.BS_data.find_all()) != 0:
             root_tag = self.get_root_tag(self.BS_data, {'isRoot': "true"})
-            for t in root_tag.children:
-                print(t)
 
             root_node = self.__create_structure__(root_tag)
 
