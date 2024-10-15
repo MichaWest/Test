@@ -46,9 +46,9 @@ class JSON_node:
 def get_max_min_sourceMultiplicity(input_str: str):
     res = input_str.split("..")
     if len(res) == 2:
-        return int(res[0]), int(res[1])
+        return (res[0]), (res[1])
     else:
-        return int(res[0]), int(res[0])
+        return (res[0]), (res[0])
 
 
 class JSON_creator:
@@ -77,12 +77,14 @@ class JSON_creator:
     def __create_structure__(self, tag: element.Tag) -> JSON_node:
         node = JSON_node()
         self.__define_fields__(node, tag)
+
+        aggregation_tags = self.BS_data.findAll('Aggregation', {'target': tag.attrs['name']})
+        for t in aggregation_tags:
+            child_name = t.attrs['source']
+            child_tag = self.BS_data.find('Class', {'name': child_name})
+            self.__create_structure__(child_tag)
+
         self.list_node.append(node)
-
-        next_tag = tag.find_next('Class')
-        if next_tag is not None:
-            self.__create_structure__(next_tag)
-
         return node
 
     def __define_fields__(self, node: JSON_node, tag: element.Tag) -> JSON_node:
